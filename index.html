@@ -578,6 +578,21 @@ footer{
   font-size:.83rem;text-align:center;transition:border-color .2s;
 }
 .img-upload-wrap:hover .img-upload-btn{border-color:rgba(108,99,255,.7);color:var(--text)}
+/* Dynamic editor cards */
+.dyn-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.9rem;margin-bottom:.75rem}
+.dyn-card-row{display:flex;gap:.4rem;align-items:center;margin-bottom:.55rem}
+.edit-mini{background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--text);padding:.42rem .6rem;border-radius:8px;font-family:var(--font-body);font-size:.82rem;outline:none;transition:border-color .2s}
+.edit-mini:focus{border-color:rgba(108,99,255,.5)}
+.edit-mini.flex1{flex:1;min-width:0}
+.edit-mini.w100{width:100%;display:block}
+.edit-mini.w60{width:60px}
+.edit-mini.icon{width:44px;text-align:center}
+.edit-mini[type=color]{padding:.2rem;height:32px;width:44px;cursor:pointer;border-radius:6px}
+textarea.edit-mini{min-height:58px;resize:vertical;margin-top:.3rem}
+.dyn-remove{background:rgba(240,62,110,.1);border:1px solid rgba(240,62,110,.22);color:var(--accent2);width:28px;height:28px;border-radius:7px;font-size:1.1rem;cursor:none;flex-shrink:0;transition:background .2s;line-height:1;display:flex;align-items:center;justify-content:center}
+.dyn-remove:hover{background:rgba(240,62,110,.25)}
+.dyn-add{margin-top:.35rem;width:100%}
+.ep-scroll{scrollbar-width:thin;scrollbar-color:rgba(108,99,255,.3) transparent}
 /* FAB */
 #edit-fab{
   position:fixed;right:1.5rem;bottom:2rem;z-index:6500;
@@ -632,44 +647,7 @@ footer{
 <button id="edit-fab" title="Edit Portfolio" onclick="toggleEdit()">✏️</button>
 
 <!-- ══ EDIT PANEL ═══════════════════════════════════════════ -->
-<div id="edit-panel">
-  <h3>✦ Edit Portfolio <button id="edit-close" onclick="toggleEdit()">✕</button></h3>
-
-  <div class="edit-section-title">Identity</div>
-  <div class="edit-field"><label>Full Name</label><input id="e-name" placeholder="Your Name"/></div>
-  <div class="edit-field"><label>Job Title</label><input id="e-title" placeholder="Developer & Designer"/></div>
-  <div class="edit-field"><label>Short Bio (Hero)</label><textarea id="e-bio"></textarea></div>
-  <div class="edit-field"><label>Profile Photo</label>
-    <div class="img-upload-wrap">
-      <input type="file" accept="image/*" onchange="handleImg(event)"/>
-      <div class="img-upload-btn">📎 Click to upload photo</div>
-    </div>
-  </div>
-  <div class="edit-field"><label>Hero Badge Text</label><input id="e-badge" placeholder="Available for work"/></div>
-
-  <div class="edit-section-title">Stats</div>
-  <div class="edit-field"><label>Years Experience</label><input id="e-stat1" placeholder="3+"/></div>
-  <div class="edit-field"><label>Projects / Specialty</label><input id="e-stat2" placeholder="WMS"/></div>
-  <div class="edit-field"><label>Clients Count</label><input id="e-stat3" placeholder="1"/></div>
-
-  <div class="edit-section-title">About</div>
-  <div class="edit-field"><label>About Description</label><textarea id="e-about"></textarea></div>
-  <div class="edit-field"><label>Tags (comma separated)</label><input id="e-tags" placeholder="React, Python, AI"/></div>
-  <div class="edit-field"><label>Resume URL</label><input id="e-resume" placeholder="https://..."/></div>
-
-  <div class="edit-section-title">Contact</div>
-  <div class="edit-field"><label>Email</label><input id="e-email" placeholder="you@email.com"/></div>
-  <div class="edit-field"><label>Location</label><input id="e-location" placeholder="City, Country"/></div>
-  <div class="edit-field"><label>Phone</label><input id="e-phone" placeholder="+91 ..."/></div>
-  <div class="edit-field"><label>GitHub URL</label><input id="e-github" placeholder="https://github.com/..."/></div>
-  <div class="edit-field"><label>LinkedIn URL</label><input id="e-linkedin" placeholder="https://linkedin.com/..."/></div>
-  <div class="edit-field"><label>Twitter/X URL</label><input id="e-twitter" placeholder="https://twitter.com/..."/></div>
-
-  <button class="apply-btn" onclick="applyEdits()">Apply Changes ✓</button>
-  <button class="apply-btn ghost" style="margin-top:.6rem" onclick="exportJSON()">Export JSON ↓</button>
-  <button class="apply-btn ghost" style="margin-top:.6rem" onclick="document.getElementById('json-import').click()">Import JSON ↑</button>
-  <input type="file" id="json-import" accept=".json" style="display:none" onchange="importJSON(event)"/>
-</div>
+<div id="edit-panel" class="ep-scroll"></div>
 
 <!-- ══ MOBILE MENU ══════════════════════════════════════════ -->
 <div class="mobile-menu" id="mobile-menu">
@@ -894,11 +872,10 @@ let data = {
   bio: "I craft digital experiences that merge technical precision with creative vision. Building products people love, one pixel at a time.",
   badge: "Available for work",
   photo: null,
-  stats: { years: "3+", project: "WMS", clients: "1" },
+  stats: { years: "3+", project: "WMS", clients: "99%" },
   about: "I'm a passionate AI Engineer with a love for clean code and beautiful interfaces. I specialize in building modern web applications and AI agents — fast, accessible, and a joy to use.",
   tags: ["WMS", "WLM", "VoCollect", "OracleDB", "SQL", "PL/SQL", "Python", "AI Agents"],
   resumeUrl: "#",
-  satisfaction: "99%",
   contact: {
     email: "shaikabdulsulthan25@gmail.com",
     location: "Bangalore, Karnataka",
@@ -942,10 +919,10 @@ function render() {
   document.getElementById('hero-badge-txt').textContent = data.badge;
   document.getElementById('stat1').textContent = data.stats.years;
   document.getElementById('stat2').textContent = data.stats.project;
-  document.getElementById('stat3').textContent = data.satisfaction;
+  document.getElementById('stat3').textContent = data.stats.clients;
   document.getElementById('stat1b').textContent = data.stats.years;
   document.getElementById('stat2b').textContent = data.stats.project;
-  document.getElementById('stat3b').textContent = data.satisfaction;
+  document.getElementById('stat3b').textContent = data.stats.clients;
 
   const photoSrc = data.photo || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(data.name)}&backgroundColor=6c63ff&textColor=ffffff`;
   document.getElementById('hero-img').src = photoSrc;
@@ -1010,18 +987,6 @@ function render() {
   ].filter(s => data.socials[s.key]).map(s =>
     `<a href="${data.socials[s.key]}" class="social-btn" target="_blank">${s.label}</a>`).join('');
 
-  // Edit fields
-  const fields = {
-    'e-name': data.name, 'e-title': data.title, 'e-bio': data.bio,
-    'e-badge': data.badge, 'e-stat1': data.stats.years, 'e-stat2': data.stats.project,
-    'e-stat3': data.stats.clients, 'e-about': data.about,
-    'e-tags': data.tags.join(', '), 'e-resume': data.resumeUrl || '',
-    'e-email': data.contact.email || '', 'e-location': data.contact.location || '',
-    'e-phone': data.contact.phone || '', 'e-github': data.socials.github || '',
-    'e-linkedin': data.socials.linkedin || '', 'e-twitter': data.socials.twitter || ''
-  };
-  Object.entries(fields).forEach(([id, val]) => { const el = document.getElementById(id); if (el) el.value = val; });
-
   // Skill bars
   setTimeout(() => {
     document.querySelectorAll('.skill-bar').forEach(b => { b.style.width = b.dataset.level + '%'; });
@@ -1037,33 +1002,201 @@ function render() {
 }
 
 /*══════════════════════════════════════════════════════════════
-  EDIT PANEL ACTIONS
+  EDIT PANEL ENGINE
 ══════════════════════════════════════════════════════════════*/
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
 function toggleEdit() {
   if (!adminUnlocked) return;
   editOpen = !editOpen;
   document.getElementById('edit-panel').classList.toggle('open', editOpen);
+  if (editOpen) renderEditPanel();
 }
-function applyEdits() {
-  data.name = document.getElementById('e-name').value || data.name;
-  data.title = document.getElementById('e-title').value || data.title;
-  data.bio = document.getElementById('e-bio').value || data.bio;
-  data.badge = document.getElementById('e-badge').value || data.badge;
-  data.stats.years = document.getElementById('e-stat1').value || data.stats.years;
-  data.stats.project = document.getElementById('e-stat2').value || data.stats.project;
-  data.stats.clients = document.getElementById('e-stat3').value || data.stats.clients;
-  data.about = document.getElementById('e-about').value || data.about;
-  data.tags = document.getElementById('e-tags').value.split(',').map(t => t.trim()).filter(Boolean);
-  data.resumeUrl = document.getElementById('e-resume').value || data.resumeUrl;
-  data.contact.email = document.getElementById('e-email').value;
-  data.contact.location = document.getElementById('e-location').value;
-  data.contact.phone = document.getElementById('e-phone').value;
-  data.socials.github = document.getElementById('e-github').value;
-  data.socials.linkedin = document.getElementById('e-linkedin').value;
-  data.socials.twitter = document.getElementById('e-twitter').value;
-  render();
-  showToast('Portfolio updated! ✨');
+
+/* ── Partial live-render helpers ── */
+function _syncName(){
+  document.getElementById('hero-name').textContent = data.name;
+  document.getElementById('nav-logo').textContent = data.name.split(' ')[0];
+  document.getElementById('footer-name').textContent = data.name.split(' ')[0];
+  document.getElementById('footer-text').textContent = `© ${new Date().getFullYear()} ${data.name} · Crafted with passion`;
+  const src = data.photo || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(data.name)}&backgroundColor=6c63ff&textColor=ffffff`;
+  document.getElementById('hero-img').src = src;
+  document.getElementById('about-img').src = src;
 }
+function _syncStats(){
+  ['stat1','stat1b'].forEach(id=>document.getElementById(id).textContent=data.stats.years);
+  ['stat2','stat2b'].forEach(id=>document.getElementById(id).textContent=data.stats.project);
+  ['stat3','stat3b'].forEach(id=>document.getElementById(id).textContent=data.stats.clients);
+}
+function _syncContact(){
+  document.getElementById('contact-desc').textContent = data.contact.description||'';
+  document.getElementById('contact-info').innerHTML=[
+    {icon:'✉️',label:'Email',val:data.contact.email},
+    {icon:'📍',label:'Location',val:data.contact.location},
+    {icon:'📞',label:'Phone',val:data.contact.phone}
+  ].filter(x=>x.val).map(x=>`<div class="contact-item"><div class="contact-icon">${x.icon}</div><div><div class="contact-detail-label">${x.label}</div><div class="contact-detail-value">${x.val}</div></div></div>`).join('');
+  document.getElementById('social-row').innerHTML=[
+    {key:'github',label:'⬡ GitHub'},
+    {key:'linkedin',label:'💼 LinkedIn'},
+    {key:'twitter',label:'✦ Twitter'}
+  ].filter(s=>data.socials[s.key]).map(s=>`<a href="${data.socials[s.key]}" class="social-btn" target="_blank">${s.label}</a>`).join('');
+}
+function _syncSkills(){
+  document.getElementById('skills-grid').innerHTML=data.skills.map(s=>`
+    <div class="skill-card" onmousemove="cardGlow(this,event)">
+      <div class="skill-icon">${s.icon}</div>
+      <div class="skill-name">${s.name}</div>
+      <div class="skill-desc">${s.desc}</div>
+      <div class="skill-bar-wrap"><div class="skill-bar" style="width:${s.level}%"></div></div>
+    </div>`).join('');
+}
+function _syncProjects(){
+  document.getElementById('projects-grid').innerHTML=data.projects.map(p=>`
+    <div class="project-card">
+      <div class="project-thumb" style="background:${p.color}15;">
+        <div class="project-thumb-bg" style="background:radial-gradient(circle,${p.color},transparent)"></div>
+        <span style="position:relative;">${p.emoji}</span>
+      </div>
+      <div class="project-body">
+        <div class="project-tags">${p.tags.map(t=>`<span class="project-tag">${t}</span>`).join('')}</div>
+        <div class="project-name">${p.name}</div>
+        <div class="project-desc">${p.desc}</div>
+        <div class="project-links">
+          <a href="${p.liveUrl}" class="project-link" target="_blank">Live Demo →</a>
+          <a href="${p.codeUrl}" class="project-link" style="color:var(--muted)" target="_blank">View Code</a>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function _syncTimeline(){
+  document.getElementById('timeline').innerHTML=data.experience.map(e=>`
+    <div class="timeline-item">
+      <div class="tl-date">${e.date}</div>
+      <div class="tl-role">${e.role}</div>
+      <div class="tl-company">${e.company}</div>
+      <div class="tl-desc">${e.desc}</div>
+    </div>`).join('');
+}
+
+/* ── Dynamic sub-editors ── */
+function _renderSkillsEd(){
+  document.getElementById('skills-ed').innerHTML=data.skills.map((s,i)=>`
+    <div class="dyn-card">
+      <div class="dyn-card-row">
+        <input class="edit-mini icon" value="${esc(s.icon)}" oninput="data.skills[${i}].icon=this.value;_syncSkills()" title="Emoji"/>
+        <input class="edit-mini flex1" value="${esc(s.name)}" oninput="data.skills[${i}].name=this.value;_syncSkills()" placeholder="Skill Name"/>
+        <input class="edit-mini w60" type="number" min="0" max="100" value="${s.level}" oninput="data.skills[${i}].level=+this.value||0;_syncSkills()" title="Level 0-100"/>
+        <button class="dyn-remove" onclick="data.skills.splice(${i},1);_renderSkillsEd();_syncSkills()">×</button>
+      </div>
+      <textarea class="edit-mini w100" oninput="data.skills[${i}].desc=this.value;_syncSkills()" placeholder="Description...">${esc(s.desc)}</textarea>
+    </div>`).join('')+
+    `<button class="apply-btn ghost dyn-add" onclick="data.skills.push({icon:'⚡',name:'New Skill',desc:'Description.',level:75});_renderSkillsEd();_syncSkills()">+ Add Skill</button>`;
+}
+function _renderProjectsEd(){
+  document.getElementById('projects-ed').innerHTML=data.projects.map((p,i)=>`
+    <div class="dyn-card">
+      <div class="dyn-card-row">
+        <input class="edit-mini icon" value="${esc(p.emoji)}" oninput="data.projects[${i}].emoji=this.value;_syncProjects()" title="Emoji"/>
+        <input class="edit-mini" type="color" value="${p.color||'#6c63ff'}" oninput="data.projects[${i}].color=this.value;_syncProjects()" title="Card color"/>
+        <input class="edit-mini flex1" value="${esc(p.name)}" oninput="data.projects[${i}].name=this.value;_syncProjects()" placeholder="Project Name"/>
+        <button class="dyn-remove" onclick="data.projects.splice(${i},1);_renderProjectsEd();_syncProjects()">×</button>
+      </div>
+      <input class="edit-mini w100" value="${esc(p.tags.join(', '))}" oninput="data.projects[${i}].tags=this.value.split(',').map(t=>t.trim()).filter(Boolean);_syncProjects()" placeholder="Tags: React, Node.js …" style="margin-bottom:.35rem"/>
+      <textarea class="edit-mini w100" oninput="data.projects[${i}].desc=this.value;_syncProjects()" placeholder="Description...">${esc(p.desc)}</textarea>
+      <input class="edit-mini w100" value="${esc(p.liveUrl||'')}" oninput="data.projects[${i}].liveUrl=this.value;_syncProjects()" placeholder="Live URL" style="margin-top:.35rem"/>
+      <input class="edit-mini w100" value="${esc(p.codeUrl||'')}" oninput="data.projects[${i}].codeUrl=this.value;_syncProjects()" placeholder="Code URL" style="margin-top:.3rem"/>
+    </div>`).join('')+
+    `<button class="apply-btn ghost dyn-add" onclick="data.projects.push({emoji:'🚀',color:'#6c63ff',name:'New Project',tags:[],desc:'Description.',liveUrl:'#',codeUrl:'#'});_renderProjectsEd();_syncProjects()">+ Add Project</button>`;
+}
+function _renderExpEd(){
+  document.getElementById('exp-ed').innerHTML=data.experience.map((e,i)=>`
+    <div class="dyn-card">
+      <div class="dyn-card-row">
+        <input class="edit-mini flex1" value="${esc(e.date)}" oninput="data.experience[${i}].date=this.value;_syncTimeline()" placeholder="2024 – Present"/>
+        <button class="dyn-remove" onclick="data.experience.splice(${i},1);_renderExpEd();_syncTimeline()">×</button>
+      </div>
+      <input class="edit-mini w100" value="${esc(e.role)}" oninput="data.experience[${i}].role=this.value;_syncTimeline()" placeholder="Job Title" style="margin-bottom:.35rem"/>
+      <input class="edit-mini w100" value="${esc(e.company)}" oninput="data.experience[${i}].company=this.value;_syncTimeline()" placeholder="Company" style="margin-bottom:.35rem"/>
+      <textarea class="edit-mini w100" oninput="data.experience[${i}].desc=this.value;_syncTimeline()" placeholder="Description...">${esc(e.desc)}</textarea>
+    </div>`).join('')+
+    `<button class="apply-btn ghost dyn-add" onclick="data.experience.push({date:'2025 – Present',role:'New Role',company:'Company',desc:'Description.'});_renderExpEd();_syncTimeline()">+ Add Entry</button>`;
+}
+
+/* ── Full panel builder ── */
+function renderEditPanel(){
+  const p = document.getElementById('edit-panel');
+  p.innerHTML=`
+    <h3>✦ Edit Portfolio <button id="edit-close" onclick="toggleEdit()">✕</button></h3>
+
+    <div class="edit-section-title">Identity</div>
+    <div class="edit-field"><label>Full Name</label>
+      <input value="${esc(data.name)}" oninput="data.name=this.value;_syncName()"/></div>
+    <div class="edit-field"><label>Job Title</label>
+      <input value="${esc(data.title)}" oninput="data.title=this.value;document.getElementById('hero-title').textContent=this.value"/></div>
+    <div class="edit-field"><label>Hero Bio</label>
+      <textarea oninput="data.bio=this.value;document.getElementById('hero-bio').textContent=this.value">${esc(data.bio)}</textarea></div>
+    <div class="edit-field"><label>Hero Badge Text</label>
+      <input value="${esc(data.badge)}" oninput="data.badge=this.value;document.getElementById('hero-badge-txt').textContent=this.value"/></div>
+    <div class="edit-field"><label>Profile Photo</label>
+      <div class="img-upload-wrap">
+        <input type="file" accept="image/*" onchange="handleImg(event)"/>
+        <div class="img-upload-btn">📎 Click to upload photo</div>
+      </div>
+    </div>
+    <div class="edit-field"><label>Resume URL</label>
+      <input value="${esc(data.resumeUrl||'')}" oninput="data.resumeUrl=this.value;document.getElementById('resume-link').href=this.value||'#'"/></div>
+
+    <div class="edit-section-title">Stats</div>
+    <div class="edit-field"><label>Years Experience</label>
+      <input value="${esc(data.stats.years)}" oninput="data.stats.years=this.value;_syncStats()"/></div>
+    <div class="edit-field"><label>Specialty / 2nd Stat</label>
+      <input value="${esc(data.stats.project)}" oninput="data.stats.project=this.value;_syncStats()"/></div>
+    <div class="edit-field"><label>3rd Stat (e.g. 99%)</label>
+      <input value="${esc(data.stats.clients)}" oninput="data.stats.clients=this.value;_syncStats()"/></div>
+
+    <div class="edit-section-title">About</div>
+    <div class="edit-field"><label>About Description</label>
+      <textarea oninput="data.about=this.value;document.getElementById('about-text').textContent=this.value">${esc(data.about)}</textarea></div>
+    <div class="edit-field"><label>Tags (comma separated)</label>
+      <input value="${esc(data.tags.join(', '))}" oninput="data.tags=this.value.split(',').map(t=>t.trim()).filter(Boolean);document.getElementById('about-tags').innerHTML=data.tags.map(t=>'<span class=\\'tag\\'>'+t+'</span>').join('')"/></div>
+
+    <div class="edit-section-title">Skills</div>
+    <div id="skills-ed"></div>
+
+    <div class="edit-section-title">Projects</div>
+    <div id="projects-ed"></div>
+
+    <div class="edit-section-title">Experience</div>
+    <div id="exp-ed"></div>
+
+    <div class="edit-section-title">Contact</div>
+    <div class="edit-field"><label>Contact Description</label>
+      <textarea oninput="data.contact.description=this.value;document.getElementById('contact-desc').textContent=this.value">${esc(data.contact.description||'')}</textarea></div>
+    <div class="edit-field"><label>Email</label>
+      <input value="${esc(data.contact.email||'')}" oninput="data.contact.email=this.value;_syncContact()"/></div>
+    <div class="edit-field"><label>Location</label>
+      <input value="${esc(data.contact.location||'')}" oninput="data.contact.location=this.value;_syncContact()"/></div>
+    <div class="edit-field"><label>Phone</label>
+      <input value="${esc(data.contact.phone||'')}" oninput="data.contact.phone=this.value;_syncContact()"/></div>
+    <div class="edit-field"><label>GitHub URL</label>
+      <input value="${esc(data.socials.github||'')}" oninput="data.socials.github=this.value;_syncContact()"/></div>
+    <div class="edit-field"><label>LinkedIn URL</label>
+      <input value="${esc(data.socials.linkedin||'')}" oninput="data.socials.linkedin=this.value;_syncContact()"/></div>
+    <div class="edit-field"><label>Twitter/X URL</label>
+      <input value="${esc(data.socials.twitter||'')}" oninput="data.socials.twitter=this.value;_syncContact()"/></div>
+
+    <div style="margin-top:1.2rem;display:flex;flex-direction:column;gap:.55rem">
+      <button class="apply-btn" onclick="showToast('All changes applied! ✨')">✓ Changes Are Live</button>
+      <button class="apply-btn ghost" onclick="exportJSON()">Export JSON ↓</button>
+      <button class="apply-btn ghost" onclick="document.getElementById('json-import').click()">Import JSON ↑</button>
+      <input type="file" id="json-import" accept=".json" style="display:none" onchange="importJSON(event)"/>
+    </div>`;
+  _renderSkillsEd();
+  _renderProjectsEd();
+  _renderExpEd();
+}
+
+function applyEdits() { showToast('All changes are live! ✨'); }
 function handleImg(e) {
   const file = e.target.files[0];
   if (!file) return;
@@ -1088,7 +1221,7 @@ function importJSON(e) {
   if (!file) return;
   const reader = new FileReader();
   reader.onload = ev => {
-    try { data = { ...data, ...JSON.parse(ev.target.result) }; render(); showToast('Imported! ✓'); }
+    try { data = { ...data, ...JSON.parse(ev.target.result) }; render(); if(editOpen) renderEditPanel(); showToast('Imported! ✓'); }
     catch { showToast('Invalid JSON'); }
   };
   reader.readAsText(file);
